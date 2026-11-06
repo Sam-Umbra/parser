@@ -18,3 +18,9 @@ fn test_3() {
     let s = Expression::from_str("1 + 2 * 3");
     assert_eq!(s.to_string(), "(+ 1 (* 2 3))");
 }
+
+#[test]
+fn test_4() {
+    let s = Expression::from_str("(1 + b) * 6");
+    assert_eq!(s.to_string(), "(* (+ 1 b) 6)")
+}
