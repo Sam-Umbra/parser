@@ -6,7 +6,7 @@ use crate::{
         Lexer, Token,
     },
     models::operators::{
-        Infix::{Minus, Plus, Power, Root, Slash, Times},
+        Infix::{ImplicitTimes, Minus, Plus, Power, Root, Slash, Times},
         Operator,
         Parenthesis::{Closing, Opening},
     },
@@ -20,7 +20,9 @@ pub enum Expression {
 impl Expression {
     pub fn from_str(input: &str) -> Expression {
         let mut lexer = Lexer::new(input);
-        parse_expression(&mut lexer, 0)
+        let expr = parse_expression(&mut lexer, 0);
+        assert_eq!(lexer.next(), Token::Eof, "Unexpected token");
+        expr
     }
 
     pub fn is_assign(&self) -> Option<(char, &Expression)> {
@@ -55,7 +57,7 @@ impl Expression {
                         Plus => return left_side + right_side,
                         Minus => return left_side - right_side,
                         Slash => return left_side / right_side,
-                        Times => return left_side * right_side,
+                        Times | ImplicitTimes => return left_side * right_side,
                         Power => return left_side.powf(right_side),
                         Root => return right_side.powf(1 as f64 / left_side),
                     },
@@ -82,6 +84,7 @@ fn parse_expression(lexer: &mut Lexer, min_bp: u8) -> Expression {
         let op = match lexer.peek() {
             Token::Eof => break,
             Token::Op(Operator::Parenthesis(Closing)) => break,
+            Token::Op(Operator::Parenthesis(Opening)) => panic!("Unexpected '('"),
             Token::Op(op) => op,
             at => panic!("Unexpected atom: {:?}", at),
         };

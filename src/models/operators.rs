@@ -47,6 +47,7 @@ pub enum Infix {
     Times,
     Power,
     Root,
+    ImplicitTimes,
 }
 
 impl Infix {
@@ -54,7 +55,8 @@ impl Infix {
         match self {
             Self::Plus | Self::Minus => (2, 3),
             Self::Slash | Self::Times => (4, 5),
-            Self::Power | Self::Root => (7, 6),
+            Self::ImplicitTimes => (6, 7),
+            Self::Power | Self::Root => (9, 8),
         }
     }
 }
@@ -68,6 +70,7 @@ impl Display for Infix {
             Self::Times => "*",
             Self::Power => "^",
             Self::Root => "√",
+            Self::ImplicitTimes => "*",
         };
         write!(f, "{}", symbol)
     }

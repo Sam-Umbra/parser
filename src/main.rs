@@ -4,7 +4,6 @@ use std::{
 };
 
 use parser::expression::Expression;
-
 fn main() {
     // let input = "2*6+4*5";
     // let mut sum = 0;
